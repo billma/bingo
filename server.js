@@ -5,7 +5,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json())
 
-const Game = require('./helpers/game');
+const Game = require('./game');
 
 const game = new Game({});
 

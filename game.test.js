@@ -1,4 +1,4 @@
-const Game = require('../helpers/game');
+const Game = require('./game');
 
 const game = new Game({
   range: [1,10],

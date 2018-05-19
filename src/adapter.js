@@ -1,7 +1,4 @@
 import fetch from 'node-fetch';
-import config from './config';
-
-const apiUrl = config.api;
 
 const request = (...args)=>{
   return fetch(...args)
