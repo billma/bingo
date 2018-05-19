@@ -13,15 +13,14 @@
     "react-scripts": "1.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "jest --watchAll",
-    "eject": "react-scripts eject"
+    "start": "concurrently \"react-scripts start\" \"node server.js\"",
+    "test": "jest --watchAll"
   },
   "proxy": "http://localhost:8080",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-jest": "^22.4.4",
+    "concurrently": "^3.5.1",
     "jest-cli": "^21.2.1",
     "regenerator-runtime": "^0.11.1"
   }

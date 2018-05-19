@@ -1,5 +1,16 @@
-#Bingo Game 
+# Bingo Game 
 ### by Bill Ma
 
 
-## Running Dev
+## Run 
+```
+npm start
+```
+
+## test
+```
+npm test
+```
+
+
+
