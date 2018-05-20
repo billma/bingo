@@ -30,7 +30,7 @@ app.post('/verify', function (req, res) {
         ticket: cells,
         currentBalls 
       })) 
-        winning.push(id); 
+        winners.push(id); 
       return winners;
     }, []);
 

@@ -77,7 +77,7 @@ class App extends Component {
       tickets,
       currentBalls
     }).then(({ winningTickets })=>{
-      if (winningTickets.length > 1) {
+      if (winningTickets.length > 0) {
         this.setState({ winningTickets }, ()=>{
           alert("Bingo!");
         });
