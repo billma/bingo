@@ -1,49 +1,92 @@
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import Adapter from './adapter';
-import Ticket from './ticket';
+import classNames from 'classnames';
 import './App.css';
+
+const Cell = ({ cell, active }) => {
+  const className = classNames(
+    'cell',
+    {'active': active}
+  )
+  return (
+    <div
+      className={className}
+    >{cell}</div>
+  );
+}
+
+const Ticket = ({ ticket, isWinning }) => {
+  const { cells, checked } = ticket;
+  const className = classNames(
+    'ticket',
+    { 'win': isWinning }
+  ); 
+  const cellList = cells.map((cell,key)=>
+    <Cell
+      {...{ 
+        key,
+        cell,
+        active: (checked.includes(key))
+      }}
+    />
+  );
+
+  return (
+    <div className={className}>
+      { cellList } 
+    </div>
+  );
+}
 
 class App extends Component {
   state={
     tickets: [],
     currentBalls: [],
-    winningTicket: ''
+    winningTickets: []
   }
   componentDidMount() {
     Adapter.getTickets(4)
-      .then((tickets)=>{
+      .then((data)=>{
+        const tickets = data.map((cells, id)=> {
+          return {id, cells, checked: []};
+        });
         this.setState({ tickets });
         this.draw();
       })
   }
 
   draw = () => {
-    const { currentBalls } = this.state;
+    const { currentBalls, tickets } = this.state;
     Adapter.draw({ currentBalls })
       .then(({ nextBall})=>{
         currentBalls.unshift(nextBall); 
-        this.setState({ currentBalls });
+        tickets.forEach(({ cells, checked })=>{
+          const check = cells.indexOf(nextBall);
+          if (check > -1) {
+            checked.push(check);
+          }
+        })
+        this.setState({ currentBalls, tickets }, this.verify);
       })
   }
 
-  bingo = ({ checked, ticket, ticketId }) => {
-    const { currentBalls } = this.state;
+  verify = () => {
+    const { currentBalls, tickets } = this.state;
     Adapter.verify({
-      checked,
-      ticket,
+      tickets,
       currentBalls
-    }).then(({ bingo })=>{
-      if (bingo) { 
-        this.setState({ winningTicket: ticketId }, ()=>{
-          alert(`Bingo! ticket number ${ticketId}`);
+    }).then(({ winningTickets })=>{
+      if (winningTickets.length > 1) {
+        this.setState({ winningTickets }, ()=>{
+          alert("Bingo!");
         });
       }
     });
   }
 
   render() {
-    const { currentBalls, tickets, winningTicket } = this.state;
+    const { currentBalls, tickets, winningTickets } = this.state;
     const lastBall = currentBalls[0];
     const prevBalls = currentBalls.slice(1,currentBalls.length);
     const ticketsView = tickets.map((ticket, key)=>{
@@ -51,16 +94,13 @@ class App extends Component {
         { ... { 
           key,
           ticket,
-          currentBalls,
-          id: key,
-          winningTicket } }
-        bingo = {this.bingo}
+          isWinning: (winningTickets.includes(key)) 
+        }}
       />
     });
     const prevBallsList = prevBalls.map((ball, i)=>
       <div key={i} className="prev">{ball}</div>
     );
-
     return (
       <div className="app">
         <div className="scores">

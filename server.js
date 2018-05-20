@@ -22,8 +22,19 @@ app.post('/draw', function (req, res) {
 });
 
 app.post('/verify', function (req, res) {
-  const bingo = game.verify(req.body);
-  res.send({ bingo });
+  const { tickets, currentBalls } = req.body;
+  const winningTickets =
+    tickets.reduce((winning, {id, cells, checked })=>{
+      if (game.verify({ 
+        checked,
+        ticket: cells,
+        currentBalls 
+      })) 
+        winning.push(id); 
+      return winning;
+    }, []);
+
+  res.send({ winningTickets });
 });
 
 
