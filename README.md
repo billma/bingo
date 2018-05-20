@@ -1,6 +1,8 @@
 # Bingo Game 
 ### by Bill Ma
 
+To see a Demo of this app. Go to https://billma.llip.life/ 
+
 ## Running App  
 ```
 npm start
