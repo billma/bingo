@@ -24,14 +24,14 @@ app.post('/draw', function (req, res) {
 app.post('/verify', function (req, res) {
   const { tickets, currentBalls } = req.body;
   const winningTickets =
-    tickets.reduce((winning, {id, cells, checked })=>{
+    tickets.reduce((winners, {id, cells, checked })=>{
       if (game.verify({ 
         checked,
         ticket: cells,
         currentBalls 
       })) 
         winning.push(id); 
-      return winning;
+      return winners;
     }, []);
 
   res.send({ winningTickets });
